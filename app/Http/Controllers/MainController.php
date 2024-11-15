@@ -11,7 +11,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        $transactions_date = transaction::all()->sortDesc()->groupBy('Date');
+        $transactions_date = transaction::all()->sortBy([['Date', 'desc'], ['id', 'asc']])->groupBy('Date');
 
 
         // dd($transactions);
