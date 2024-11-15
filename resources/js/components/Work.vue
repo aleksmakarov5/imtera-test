@@ -33,7 +33,7 @@
         font-size: 14px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         ">
-            <div @click="add_show = !add_show" style="
+            <div @click="closeAdd()" style="
             position: absolute;
             right: 8px;
             top: 8px;
@@ -396,6 +396,12 @@ export default {
                     this.errors=error.response.data.errors
                 }
                 )
+        },
+        closeAdd()
+        {
+            this.add_show = !this.add_show
+            this.errors=[]
+
         }
 
     }
