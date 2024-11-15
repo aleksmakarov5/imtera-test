@@ -190,7 +190,7 @@
                         <td><span v-html="tr.NazPay" /></td>
                         <td>{{ tr.deal_id }}</td>
                         <td><label class="switch">
-                                <input type="checkbox">
+                                <input type="checkbox" checked>
                                 <span class="slider round"></span>
                             </label>Факт</td>
                     </tr>
