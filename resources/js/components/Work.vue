@@ -385,7 +385,6 @@ export default {
                     this.NazPay = ''
                     this.deal_id = ''
                     this.status_id = ''
-                    this.Sch = ''
                     this.budget_item_id = ''
                     let all = document.getElementById('all');
                     all.checked = false;
