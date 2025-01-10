@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\budget_item;
 use App\Models\deal;
 use App\Models\transaction;
-use App\classes\ComplexNumber;
+use App\Classes\ComplexNumber;
 
 class MainController extends Controller
 {
