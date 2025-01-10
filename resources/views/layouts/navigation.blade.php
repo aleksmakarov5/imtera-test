@@ -6,19 +6,24 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="storage/img/logo.png" width=180 alt="">
+                        <img src="storage/img/logo.png" width=50 alt="">
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        Отчет
+                        Главная
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('vypiska')" :active="request()->routeIs('vypiska')">
-                        Выписка из 1С
+                    <x-nav-link :href="route('coube')" :active="request()->routeIs('coube')">
+                        Уравнения
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('shear')" :active="request()->routeIs('shear')">
+                        Срез
                     </x-nav-link>
                 </div>
             </div>

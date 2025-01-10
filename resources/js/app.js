@@ -3,12 +3,13 @@ import { createApp } from 'vue';
 
 import Alpine from 'alpinejs';
 import Work from './components/Work.vue';
+import Kub from './components/Kub.vue';
 
 const app = createApp({
   components: {
 
-    Work
-
+        Work,
+        Kub
   },
 })
 app.mount('#app')

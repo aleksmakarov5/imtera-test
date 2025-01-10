@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\budget_item;
 use App\Models\deal;
 use App\Models\transaction;
+use App\classes\ComplexNumber;
 
 class MainController extends Controller
 {
@@ -18,9 +19,36 @@ class MainController extends Controller
         return view('dashboard', ['transactions_date' => $transactions_date]);
     }
 
-    public function vypiska()
+    public function coube()
     {
-        return view('vypiska');
+        return view('coube');
+    }
+    public function shear()
+    {
+        return view('shear');
+    }
+    public function step2(Request $request)
+    {
+        $a = $request->a ? $request->a : 0;
+        $b = $request->b ? $request->b : 0;
+        $c = $request->c ? $request->c : 0;
+        $x1 = 0;
+        $x2 = 0;
+        $d = 0;
+        if ($a != 0) {
+            $d = $b * $b - 4 * $a * $c;
+            if ($d > 0) {
+                $x1 = (-$b + sqrt($d)) / (2 * $a);
+                $x2 = (-$b - sqrt($d)) / (2 * $a);
+            }
+        } else
+        if ($b != 0) {
+            $x1 = -$c / $b;
+            $x2 = $x1;
+            $d = 0;
+        }
+
+        return view('coube', ['x1' => $x1, 'x2' => $x2, 'n' => 2, 'd' => $d]);
     }
     public function file_upload(Request $request)
     {

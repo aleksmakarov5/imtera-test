@@ -948,7 +948,7 @@
 
 
                 <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                    Imtera corporation 2024
+                    Архангельский филиал РМРС 2025
                 </footer>
             </div>
         </div>

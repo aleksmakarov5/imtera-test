@@ -10,8 +10,9 @@ Route::get('/', function () {
 });
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [MainController::class, 'index'])->name('dashboard');
-    Route::get('/vypiska', [MainController::class, 'vypiska'])->name('vypiska');
-    Route::post('file_upload', [MainController::class, 'file_upload'])->name('file_upload');
+    Route::get('/shear', [MainController::class, 'shear'])->name('shear');
+    Route::get('/coube', [MainController::class, 'coube'])->name('coube');
+    Route::post('step2', [MainController::class, 'step2'])->name('step2');
 });
 
 Route::middleware('auth')->group(function () {
