@@ -7,8 +7,8 @@ class ComplexNumber
     /**
      * Create a new class instance.
      */
-    private $real;
-    private $imaginary;
+    public $real;
+    public $imaginary;
     public function __construct($real, $imaginary)
     {
         $this->real = $real;
@@ -40,7 +40,9 @@ class ComplexNumber
     }
     public function __toString()
     {
-        return "({$this->real}, {$this->imaginary}i)";
+        $real = round($this->real, 2);
+        $imaginary = round($this->imaginary, 2);
+        return "({$real}, {$imaginary}i)";
     }
     public function getReal()
     {

@@ -48,7 +48,175 @@ class MainController extends Controller
             $d = 0;
         }
 
-        return view('coube', ['x1' => $x1, 'x2' => $x2, 'n' => 2, 'd' => $d]);
+        return view('coube', ['a' => $a, 'b' => $b, 'c' => $c, 'x1' => $x1, 'x2' => $x2, 'n' => 2, 'd' => $d]);
+    }
+
+    public function step3(Request $request)
+    {
+        $a = $request->a ? $request->a : 0;
+        $b = $request->b ? $request->b : 0;
+        $c = $request->c ? $request->c : 0;
+        $x1 = new ComplexNumber(0, 0);
+        $x2 = new ComplexNumber(0, 0);
+        $x3 = new ComplexNumber(0, 0);
+        $x4 = new ComplexNumber(0, 0);
+        $P = -$a * $a / 3 + $b;
+        $Q = -$a / 3 * ($b - 2 * $a * $a / 9) + $c;
+        $M = $Q * $Q / 4 + $P * $P * $P / 27;
+        $T = sqrt(abs($P * $P * $P / 27));
+        $N = sqrt(abs($P / 3));
+        if ($M < 0) {
+            $Fi = atan(-2 * sqrt(-$M) / $Q);
+            if ($Q > 0) {
+                $Fi += pi();
+            }
+            $x1->real = 2 * $N * cos($Fi / 3);
+            $x1->imaginary = 0;
+            $x2->real = 2 * $N * cos(($Fi + 2 * pi()) / 3);
+            $x2->imaginary = 0;
+            $x3->real = 2 * $N * cos(($Fi + 4 * pi()) / 3);
+            $x3->imaginary = 0;
+        }
+        if ($M == 0) {
+            if ($Q > 0) {
+                $x1->real = $N;
+                $x1->imaginary = 0;
+                $x2 = $x1;
+                $x3->real = -2 * $N;
+                $x3->imaginary = 0;
+            }
+        }
+        if ($M > 0) {
+            $alf = -$Q / 2 + sqrt($M);
+            $bet = -$Q / 2 - sqrt($M);
+            if ($alf >= 0)
+                $alf = pow($alf, 1 / 3);
+            else   $alf = -pow(-$alf, 1 / 3);
+            if ($bet >= 0)
+                $bet = pow($bet, 1 / 3);
+            else   $bet = -pow(-$bet, 1 / 3);
+            $x1->real = $alf + $bet;
+            $x1->imaginary = 0;
+            $x2->real = -$x1->real / 2;
+            $x2->imaginary = sqrt(3) * ($alf - $bet) / 2;
+            $x3->real = -$x1->real / 2;
+            $x3->imaginary = -$x2->imaginary / 2;
+        }
+        $x1->real -= $a / 3;
+        $x2->real -= $a / 3;
+        $x3->real -= $a / 3;
+
+
+
+        return view('coube', ['a' => $a, 'b' => $b, 'c' => $c, 'x1' => $x1, 'x2' => $x2, 'x3' => $x3, 'n' => 3]);
+    }
+    public function step4(Request $request)
+    {
+        $a = $request->a ? $request->a : 0;
+        $b = $request->b ? $request->b : 0;
+        $c = $request->c ? $request->c : 0;
+        $d = $request->d ? $request->d : 0;
+        $x1 = new ComplexNumber(0, 0);
+        $x2 = new ComplexNumber(0, 0);
+        $x3 = new ComplexNumber(0, 0);
+        $x4 = new ComplexNumber(0, 0);
+        $A0 = -$a / 4;
+        $P = -3 * $a * $a * 8 + $b;
+        $Q = $a * ($a * $a / 4 - $b) / 2 + $c;
+        $R = $a * $a * ($b - 3 * $a * $a / 16) / 16 - $a * $c / 4 + $d;
+        $A1 = $P;
+        $B1 = $P * $P / 4 - $R;
+        $C1 = -$Q * $Q / 8;
+        $a = $A1;
+        $b = $B1;
+        $c = $C1;
+        $x1 = new ComplexNumber(0, 0);
+        $x2 = new ComplexNumber(0, 0);
+        $x3 = new ComplexNumber(0, 0);
+        $x4 = new ComplexNumber(0, 0);
+        $P = -$a * $a / 3 + $b;
+        $Q = -$a / 3 * ($b - 2 * $a * $a / 9) + $c;
+        $M = $Q * $Q / 4 + $P * $P * $P / 27;
+        $T = sqrt(abs($P * $P * $P / 27));
+        $N = sqrt(abs($P / 3));
+        if ($M < 0) {
+            $Fi = atan(-2 * sqrt(-$M) / $Q);
+            if ($Q > 0) {
+                $Fi += pi();
+            }
+            $x1->real = 2 * $N * cos($Fi / 3);
+            $x1->imaginary = 0;
+            $x2->real = 2 * $N * cos(($Fi + 2 * pi()) / 3);
+            $x2->imaginary = 0;
+            $x3->real = 2 * $N * cos(($Fi + 4 * pi()) / 3);
+            $x3->imaginary = 0;
+        }
+        if ($M == 0) {
+            if ($Q > 0) {
+                $x1->real = $N;
+                $x1->imaginary = 0;
+                $x2 = $x1;
+                $x3->real = -2 * $N;
+                $x3->imaginary = 0;
+            }
+        }
+        if ($M > 0) {
+            $alf = -$Q / 2 + sqrt($M);
+            $bet = -$Q / 2 - sqrt($M);
+            if ($alf >= 0)
+                $alf = pow($alf, 1 / 3);
+            else   $alf = -pow(-$alf, 1 / 3);
+            if ($bet >= 0)
+                $bet = pow($bet, 1 / 3);
+            else   $bet = -pow(-$bet, 1 / 3);
+            $x1->real = $alf + $bet;
+            $x1->imaginary = 0;
+            $x2->real = -$x1->real / 2;
+            $x2->imaginary = sqrt(3) * ($alf - $bet) / 2;
+            $x3->real = -$x1->real / 2;
+            $x3->imaginary = -$x2->imaginary / 2;
+        }
+        $x1->real -= $a / 3;
+        $x2->real -= $a / 3;
+        $x3->real -= $a / 3;
+        $X = $x1->real / 2;
+        $M1 = -$X - $P / 2 + $Q / sqrt(16 + $X);
+        $M2 = -$X - $P / 2 - $Q / sqrt(16 + $X);
+        $x1->real = -sqrt($X) + $A0;
+        $x1->imaginary = sqrt(abs($M1));
+        $x2->real = $x1->real;
+        $x2->imaginary = -sqrt(abs($M1));
+        $x3->real = sqrt($X) + $A0;
+        $x3->imaginary = sqrt(abs($M2));
+        $x4->real = $x3->real;
+        $x4->imaginary = -sqrt(abs($M2));
+        if ($M1 >= 0) {
+            $x1->real += sqrt($M1);
+            $x1->imaginary = 0;
+            $x2->real -= sqrt($M1);
+            $x2->imaginary = 0;
+        }
+        if ($M2 >= 0) {
+            $x3->real += sqrt($M2);
+            $x3->imaginary = 0;
+            $x4->real -= sqrt($M2);
+            $x4->imaginary = 0;
+        }
+        return view('coube', ['a' => $request->a, 'b' => $request->b, 'c' => $request->c, 'd' => $request->d, 'x1' => $x1, 'x2' => $x2, 'x3' => $x3, 'x4' => $x4, 'n' => 4]);
+    }
+    public function print(request $request)
+    {
+        return view('print', [
+            'a' => $request->a,
+            'b' => $request->b,
+            'c' => $request->c,
+            'd' => $request->d,
+            'x1' => $request->x1,
+            'x2' => $request->x2,
+            'x3' => $request->x3,
+            'x4' => $request->x4,
+            'n' => $request->n
+        ]);
     }
     public function file_upload(Request $request)
     {

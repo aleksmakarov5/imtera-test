@@ -13,6 +13,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/shear', [MainController::class, 'shear'])->name('shear');
     Route::get('/coube', [MainController::class, 'coube'])->name('coube');
     Route::post('step2', [MainController::class, 'step2'])->name('step2');
+    Route::post('step3', [MainController::class, 'step3'])->name('step3');
+    Route::post('step4', [MainController::class, 'step4'])->name('step4');
+    Route::post('print', [MainController::class, 'print'])->name('print');
 });
 
 Route::middleware('auth')->group(function () {
