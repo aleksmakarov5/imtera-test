@@ -66,7 +66,8 @@ class MainController extends Controller
         $T = sqrt(abs($P * $P * $P / 27));
         $N = sqrt(abs($P / 3));
         if ($M < 0) {
-            $Fi = atan(-2 * sqrt(-$M) / $Q);
+            $Fi = 1;
+            // atan(-2 * sqrt(-$M) / $Q);
             if ($Q > 0) {
                 $Fi += pi();
             }
