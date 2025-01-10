@@ -56,35 +56,34 @@ class MainController extends Controller
         $a = $request->a ? $request->a : 0;
         $b = $request->b ? $request->b : 0;
         $c = $request->c ? $request->c : 0;
-        $x1 = new ComplexNumber(0, 0);
-        $x2 = new ComplexNumber(0, 0);
-        $x3 = new ComplexNumber(0, 0);
-        $x4 = new ComplexNumber(0, 0);
+        // $x1 = new ComplexNumber(0, 0);
+        // $x2 = new ComplexNumber(0, 0);
+        // $x3 = new ComplexNumber(0, 0);
+        // $x4 = new ComplexNumber(0, 0);
         $P = -$a * $a / 3 + $b;
         $Q = -$a / 3 * ($b - 2 * $a * $a / 9) + $c;
         $M = $Q * $Q / 4 + $P * $P * $P / 27;
         $T = sqrt(abs($P * $P * $P / 27));
         $N = sqrt(abs($P / 3));
         if ($M < 0) {
-            $Fi = 1;
-            // atan(-2 * sqrt(-$M) / $Q);
+            $Fi = atan(-2 * sqrt(-$M) / $Q);
             if ($Q > 0) {
                 $Fi += pi();
             }
-            $x1->real = 2 * $N * cos($Fi / 3);
-            $x1->imaginary = 0;
-            $x2->real = 2 * $N * cos(($Fi + 2 * pi()) / 3);
-            $x2->imaginary = 0;
-            $x3->real = 2 * $N * cos(($Fi + 4 * pi()) / 3);
-            $x3->imaginary = 0;
+            // $x1->real = 2 * $N * cos($Fi / 3);
+            // $x1->imaginary = 0;
+            // $x2->real = 2 * $N * cos(($Fi + 2 * pi()) / 3);
+            // $x2->imaginary = 0;
+            // $x3->real = 2 * $N * cos(($Fi + 4 * pi()) / 3);
+            // $x3->imaginary = 0;
         }
         if ($M == 0) {
             if ($Q > 0) {
-                $x1->real = $N;
-                $x1->imaginary = 0;
-                $x2 = $x1;
-                $x3->real = -2 * $N;
-                $x3->imaginary = 0;
+                //     $x1->real = $N;
+                //     $x1->imaginary = 0;
+                //     $x2 = $x1;
+                //     $x3->real = -2 * $N;
+                //     $x3->imaginary = 0;
             }
         }
         if ($M > 0) {
@@ -96,17 +95,19 @@ class MainController extends Controller
             if ($bet >= 0)
                 $bet = pow($bet, 1 / 3);
             else   $bet = -pow(-$bet, 1 / 3);
-            $x1->real = $alf + $bet;
-            $x1->imaginary = 0;
-            $x2->real = -$x1->real / 2;
-            $x2->imaginary = sqrt(3) * ($alf - $bet) / 2;
-            $x3->real = -$x1->real / 2;
-            $x3->imaginary = -$x2->imaginary / 2;
+            // $x1->real = $alf + $bet;
+            // $x1->imaginary = 0;
+            // $x2->real = -$x1->real / 2;
+            // $x2->imaginary = sqrt(3) * ($alf - $bet) / 2;
+            // $x3->real = -$x1->real / 2;
+            // $x3->imaginary = -$x2->imaginary / 2;
         }
-        $x1->real -= $a / 3;
-        $x2->real -= $a / 3;
-        $x3->real -= $a / 3;
-
+        // $x1->real -= $a / 3;
+        // $x2->real -= $a / 3;
+        // $x3->real -= $a / 3;
+        $x1 = 1;
+        $x2 = 1;
+        $x3 = 1;
 
 
         return view('coube', ['a' => $a, 'b' => $b, 'c' => $c, 'x1' => $x1, 'x2' => $x2, 'x3' => $x3, 'n' => 3]);
