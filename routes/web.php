@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\api\MainController as MainControllerApi;
+use App\Http\Controllers\api\ShearController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,7 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::post('api/delete', [MainControllerApi::class, 'delete']);
+Route::post('/api/delete', [MainControllerApi::class, 'delete']);
+Route::post('/api/shear_save', [ShearController::class, 'save']);
+Route::get('/api/shear_load', [ShearController::class, 'load']);
+
 Route::post('api/create', [MainControllerApi::class, 'store'])
     ->name('create');
 Route::post('api/copy', [MainControllerApi::class, 'copy'])
