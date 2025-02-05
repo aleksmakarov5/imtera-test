@@ -56,16 +56,27 @@
 </style>
 <template>
 <div>
-    <button class="accordion-est" @click="saveShear()">
-            Сохранить
-        </button>
-        <button class="accordion-est" @click="loadShear()">
-            Загрузить
-        </button>
+
         <button class="accordion-est" @click="show_wwod=!show_wwod">
             Исходные данные
+            <template v-if="!show_wwod">+</template>
+            <template v-else>-</template>
         </button>
         <div  :class="show_wwod?'':'d_none'">
+            <div class="row">
+                <div class="col-md-2">
+                    <button class="accordion-est" @click="saveShear()">
+            Сохранить
+        </button>
+                </div>
+                <div class="col-md-2">
+                       <button class="accordion-est" @click="loadShear()">
+            Загрузить
+        </button>
+                </div>
+            </div>
+
+
             <div class="cont">
 <div class="row">
     <div class="col-md-2">
@@ -130,10 +141,12 @@
         </div>
         <button class="accordion-est" @click="show_paint=!show_paint">
             Графическое представление профиля
+            <template v-if="!show_paint">+</template>
+            <template v-else>-</template>
         </button>
         <div  :class="show_paint?'':'d_none'">
             <button class="accordion-est" @click="paintCanvas()">
-            Показать
+            Нарисовать
         </button>
             <div class="cont">
                 <center>
@@ -142,6 +155,8 @@
         </div>
         <button class="accordion-est" @click="show_result=!show_result">
             Результат
+            <template v-if="!show_result">+</template>
+            <template v-else>-</template>
         </button>
         <div  :class="show_result?'':'d_none'">
             <div class="cont">
@@ -279,7 +294,7 @@ export default {
 
                 }
             }
-            ctx.strokeStyle = "red";
+            ctx.strokeStyle = "blue";
             ctx.stroke();
 
 
