@@ -8,6 +8,7 @@ use App\Models\shear;
 use App\Models\vertex;
 use App\Models\edge;
 use App\Models\matrix;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 define("Mat", 85); // Максимальное количество рёбер
 
@@ -434,6 +435,49 @@ class ShearController extends Controller
 
         ];
     }
+    private function str2number($str)
+    {
+        $str = str_replace(',', '.', preg_replace('/[^,.0-9]/', '', $str));
+        if (!$str)
+            return '0.0';
+        else
+            return round((float)($str), 2);
+    }
+    public function save_file(request $request)
+    {
+        $res = $this->calculate($request);
+        // dd($res[15][0]);
+        $location = "storage/file.docx";
+        $templateProcessor = new TemplateProcessor('storage/doc_template/template.docx');
+        $templateProcessor->setValue('F', $this->str2number($res[0]));
+        $templateProcessor->setValue('OM', $this->str2number($res[3]));
+        $templateProcessor->setValue('Iy0', $this->str2number($res[4]));
+        $templateProcessor->setValue('Iz0', $this->str2number($res[5]));
+        $templateProcessor->setValue('B0', $this->str2number($res[6]));
+        $templateProcessor->setValue('Y0', $this->str2number($res[7]));
+        $array = [];
+        foreach ($res[15] as $key => $value) {
+            $array[] = array(
+                'i' => $key + 1,
+                'i1' => $res[15][$key][0],
+                'i2' => $res[15][$key][1],
+                'Zm' => $this->str2number($res[9][$key] ? $res[9][$key] : 0),
+                'Ym' => $this->str2number($res[11][$key] ? $res[11][$key] : 0),
+                'Fi' => $this->str2number($res[1][$key] ? $res[1][$key] : 0),
+                'Tm' => $this->str2number($res[2][$key] ? $res[2][$key] : 0),
+                'Hm' => $this->str2number($res[13][$key] ? $res[13][$key] : 0),
+                'Km' => $this->str2number($res[14][$key] ? $res[14][$key] : 0),
+                'Lm' => $this->str2number($res[12][$key] ? $res[12][$key] : 0)
+            );
+        }
+        $templateProcessor->cloneRowAndSetValues('i', $array);
+
+        if (file_exists($location)) {
+            unlink($location);
+        }
+        $templateProcessor->saveAs($location);
+        return response()->download($location);
+    }
     public function calculate_test()
     {
         $res = $this->load();
@@ -644,7 +688,7 @@ class ShearController extends Controller
 
         for ($I = 0; $I < $M; $I++) {
             $B0m = $Bm[$I] - $B0;
-            echo $B0m . '<br>';
+            // echo $B0m . '<br>';
 
             $C1 = cos(($Q1[$I] + $QL[$I]) / 2);
             $S1 = sin(($QL[$I] - $Q1[$I]) / 2);
@@ -655,7 +699,7 @@ class ShearController extends Controller
             $T0m[$I] = $T0m[$I] + $B0m * $this->Step($QL[$I], 4) * cos($FI[$I]) / 4;
             $T0m[$I] = $T0m[$I] + $this->Step($QL[$I], 5) * cos($FI[$I]) * cos($FI[$I]) / 20;
         }
-        dd($B0m, $FI, $QL, $S);
+        // dd($B0m, $FI, $QL, $S);
         for ($I = 0; $I < ($M - $K); $I++) {
             $A = 0;
             for ($J = 0; $J < $M; $J++) {
@@ -733,28 +777,28 @@ class ShearController extends Controller
         }
 
         return [
-            // $F,
-            // $Q1_rez,
-            // $Tm_rez,
-            // $OM,
-            // $Iy0,
-            // $Iz0,
-            // $B0,
-            // $Y0,
-            // $Bn,
-            // $Bm,
-            // $Yn,
-            // $Ym,
+            $F,
+            $Q1_rez,
+            $Tm_rez,
+            $OM,
+            $Iy0,
+            $Iz0,
+            $B0,
+            $Y0,
+            $Bn,
+            $Bm,
+            $Yn,
+            $Ym,
             $QL,
-            // $Tm,
-            // $ks,
-            // $C,
-            // $Xt,
-            // $Xt2,
-            // $T1,
-            // $T2,
-            // $Sigbn1,
-            // $Sigbn2,
+            $Tm,
+            $ks,
+            $C,
+            $Xt,
+            $Xt2,
+            $T1,
+            $T2,
+            $Sigbn1,
+            $Sigbn2,
         ];
     }
 

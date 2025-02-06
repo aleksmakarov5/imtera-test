@@ -179,6 +179,7 @@
                        <button class="accordion-est" @click="fileShear()">
             Сохранить в файл
         </button>
+        <a target="_blank" class="accordion-est" href="storage/file.docx" v-if="showSave" @click="showSave=!showSave">Скачать</a>
                 </div>
             </div>
             <div v-if="F>0">
@@ -321,7 +322,8 @@ export default {
             T1:[],
             T2:[],
             Sigbn1:[],
-            Sigbn2:[],
+            Sigbn2: [],
+            showSave: false,
 
         }
     },
@@ -495,6 +497,32 @@ export default {
             this.Sigbn1=res.data[20]
             this.Sigbn2=res.data[21]
 
+                },
+                error => {
+                    this.errors=error.response.data.errors
+                }
+                )
+        },
+        fileShear() {
+
+            axios.post(`/api/shear_save_file`, {
+
+                K: this.K,
+                M: this.M,
+                z: this.z,
+                y: this.y,
+                i1: this.i1,
+                i2: this.i2,
+                c: this.c,
+                k: this.k,
+                h: this.h,
+                Nsw: parseFloat(this.Nsw),
+                Msw: parseFloat(this.Msw),
+                _token: this.csrf,
+
+            })
+                .then(res => {
+this.showSave=true
                 },
                 error => {
                     this.errors=error.response.data.errors
