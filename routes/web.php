@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('/api/delete', [MainControllerApi::class, 'delete']);
 Route::post('/api/shear_save', [ShearController::class, 'save']);
+Route::post('/api/shear_calculate', [ShearController::class, 'calculate']);
+Route::get('/api/shear_calculate_test', [ShearController::class, 'calculate_test']);
 Route::get('/api/shear_load', [ShearController::class, 'load']);
 
 Route::post('api/create', [MainControllerApi::class, 'store'])

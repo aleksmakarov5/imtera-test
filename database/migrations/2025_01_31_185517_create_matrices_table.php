@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('edge_id')->nullable();
-            $table->unsignedBigInteger('c')->nullable();
+            $table->float('c')->nullable();
         });
     }
 

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('M')->nullable();
             $table->unsignedBigInteger('K')->nullable();
+            $table->float('Nsw')->nullable();
+            $table->float('Msw')->nullable();
         });
     }
 

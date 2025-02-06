@@ -87,6 +87,14 @@
         <h3>Количество контуров</h3>
         <input type="text" v-model="K" @blur="makeTable()">
         </div>
+        <div class="col-md-2">
+        <h3>Перерезывающая сила, кгс</h3>
+        <input type="text" v-model="Nsw" >
+        </div>
+        <div class="col-md-2">
+        <h3>Изгибающий момент, кгс*см</h3>
+        <input type="text" v-model="Msw">
+        </div>
         <div class="row" v-if="M!=0&&K!=0">
             <div class="col">
                 <h3>Координаты вершин</h3>
@@ -132,6 +140,7 @@
                     </tr>
                     </tbody>
                 </table>
+
             </div>
 
         </div>
@@ -160,8 +169,101 @@
         </button>
         <div  :class="show_result?'':'d_none'">
             <div class="cont">
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint, aperiam enim! Deserunt, dolor tenetur! Delectus necessitatibus vitae expedita amet vel fugiat ratione, perspiciatis dolor qui, earum consequuntur. Numquam, dolorem eius!
+<div class="row">
+                <div class="col-md-2">
+                    <button class="accordion-est" @click="calculateShear()">
+            Вывести  на <br>  экран
+        </button>
+                </div>
+                <div class="col-md-2">
+                       <button class="accordion-est" @click="fileShear()">
+            Сохранить в файл
+        </button>
+                </div>
+            </div>
+            <div v-if="F>0">
+                <br>
+                Площадь поперечного сечения: <b>{{makeCount(F)}}</b> см2 <br>
+  Приведенная площадь по сдвигу: <b>{{makeCount(OM)}}</b> см2 <br>
+  Момент инерции относительно оси Y: <b>{{makeCount(Iy0)}}</b> см4<br>
+  Момент инерции относительно оси Z: <b>{{makeCount(Iz0)}}</b> см4<br>
+Отстояние н.о. Y  от о.с.: <b>{{makeCount(B0)}}</b> см<br>
+ Отстояние н.о. Z  от о.с.: <b>{{makeCount(Y0)}}</b> см<br>
+<br><br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Номер ребра</th>
+            <th>I1</th>
+            <th>I2</th>
+            <th>Zm,см</th>
+            <th>Ym,см</th>
+            <th>Fi,deg</th>
+            <th>Tm,cm</th>
+            <th>Hm,cm</th>
+            <th>Km</th>
+            <th>Lm,cm</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(item, index) in c" :key="index">
+            <td>{{ index+1 }}</td>
+            <td>{{ (C[index][0]) }}</td>
+            <td>{{ (C[index][1]) }}</td>
+            <td>{{ makeCount(Bm[index]) }}</td>
+            <td>{{ makeCount(Ym[index]) }}</td>
+            <td>{{ makeCount(Q1_rez[index]) }}</td>
+            <td>{{ makeCount(Tm_rez[index]) }}</td>
+            <td>{{ makeCount(Tm[index] )}}</td>
+            <td>{{ makeCount(ks[index]) }}</td>
+            <td>{{ makeCount(QL[index]) }}</td>
+        </tr>
+    </tbody>
+</table>
+<h1>Касат. усилия и напряжения в начале и конце ребра, кгс/см2</h1>
+где T   - распределение потока касательных усилий по вершинам ребер<br>tau - касат.напряжения в вершинах ребер
+ <table class="table">
+<thead>
+    <tr>
+        <th>Номер ребра</th>
+        <th>T1</th>
+        <th>tau1</th>
+        <th>T2</th>
+        <th>tau2</th>
 
+    </tr>
+</thead>
+<tbody>
+    <tr v-for="(item, index) in T1" :key="index">
+        <td>{{ index+1 }}</td>
+        <td>{{ makeCount(T1[index]) }}</td>
+        <td>{{ makeCount(Xt[index]) }}</td>
+        <td>{{ makeCount(T2[index]) }}</td>
+        <td>{{ makeCount(Xt2[index]) }}</td>
+
+    </tr>
+</tbody>
+                </table>
+нормальные напряжения при изгибе в начале и конце ребра, кгс/см2
+
+                <table class="table">
+                    <caption>Информация о контурах</caption>
+                    <thead>
+                        <tr>
+                            <th>Номер контура</th>
+                            <th>Sigm (нач.реб.)</th>
+                            <th>Sigm (кон.реб.) </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in Sigbn1" :key="index">
+                            <td>{{ index+1 }}</td>
+                            <td>{{ makeCount(Sigbn1[index]) }}</td>
+                            <td>{{ makeCount(Sigbn1[index]) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             </div>
         </div>
 
@@ -196,6 +298,30 @@ export default {
             k: [],
             c: [],
             h: [],
+            Nsw: 0,
+            Msw: 0,
+            F:0,
+            Q1_rez:[],
+            Tm_rez:[],
+            OM:0,
+            Iy0:0,
+            Iz0:0,
+            B0:0,
+            Y0:0,
+            Bn:[],
+            Bm:[],
+            Yn:[],
+            Ym:[],
+            QL:[],
+            Tm:[],
+            ks:[],
+            C:[],
+            Xt:[],
+            Xt2:[],
+            T1:[],
+            T2:[],
+            Sigbn1:[],
+            Sigbn2:[],
 
         }
     },
@@ -268,15 +394,16 @@ export default {
         },
         editC(index1, index2)
         {
-            this.c[index1][index2] = document.getElementById('C_'+index1+'_'+index2).innerText;
+            this.c[index1][index2] = parseFloat(document.getElementById('C_' + index1 + '_' + index2).innerText);
+
         },
         editH(index)
         {
-            this.h[index] = document.getElementById('H_'+index).innerText;
+            this.h[index] = parseFloat(document.getElementById('H_'+index).innerText);
         },
         editK(index)
         {
-            this.k[index] = document.getElementById('K_'+index).innerText;
+            this.k[index] = parseFloat(document.getElementById('K_'+index).innerText);
         },
         paintCanvas()
         {
@@ -309,21 +436,87 @@ export default {
                 y: this.y,
                 i1: this.i1,
                 i2: this.i2,
+                c: this.c,
+                k: this.k,
+                h: this.h,
+                Nsw: parseFloat(this.Nsw),
+                Msw: parseFloat(this.Msw),
+                _token: this.csrf,
 
             })
                 .then(res => {
                     console.log(res.data)
+
                 },
                 error => {
                     this.errors=error.response.data.errors
                 }
                 )
         },
+         calculateShear() {
+
+            axios.post(`/api/shear_calculate`, {
+                K: this.K,
+                M: this.M,
+                z: this.z,
+                y: this.y,
+                i1: this.i1,
+                i2: this.i2,
+                c: this.c,
+                k: this.k,
+                h: this.h,
+                Nsw: parseFloat(this.Nsw),
+                Msw: parseFloat(this.Msw),
+                _token: this.csrf,
+
+            })
+                .then(res => {
+                    console.log(res.data[12])
+                    this.F=res.data[0],
+            this.Q1_rez=res.data[1]
+            this.Tm_rez=res.data[2]
+            this.OM=res.data[3]
+            this.Iy0=res.data[4]
+                    this.Iz0 = res.data[5]
+            this.B0=res.data[6]
+            this.Y0=res.data[7]
+            this.Bn=res.data[8]
+            this.Bm=res.data[9]
+            this.Yn=res.data[10]
+            this.Ym=res.data[11]
+            this.QL=res.data[12]
+            this.Tm=res.data[13]
+            this.ks=res.data[14]
+            this.C=res.data[15]
+            this.Xt=res.data[16]
+            this.Xt2=res.data[17]
+            this.T1=res.data[18]
+            this.T2=res.data[19]
+            this.Sigbn1=res.data[20]
+            this.Sigbn2=res.data[21]
+
+                },
+                error => {
+                    this.errors=error.response.data.errors
+                }
+                )
+        },
+         makeCount(n) {
+
+            let text = parseFloat(n).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1 ")
+
+                return text;
+
+
+        },
         loadShear() {
             axios.get(`/api/shear_load`)
                 .then(res => {
-                     this.M = res.data[0].M;
+
+                    this.M = res.data[0].M;
                     this.K = res.data[0].K;
+                    this.Nsw = res.data[0].Nsw;
+                    this.Msw = res.data[0].Msw;
                     this.z = []
                     this.y = []
                     for (let i = 0; i < res.data[1].length; i++)
@@ -335,16 +528,14 @@ export default {
                     {
                         this.i1[i] = parseFloat(res.data[2][i].i1);
                         this.i2[i] = parseFloat(res.data[2][i].i2);
-                        this.tm[i] = 0
-                        this.k[i] = 0
-                        this.h[i] = 0
+                        this.k[i] = parseFloat(res.data[2][i].k);
+                        this.h[i] = parseFloat(res.data[2][i].h);
                         this.c[i] = []
+                        for (let j = 0; j < this.K; j++) {
+                            this.c[i][j] = parseFloat(res.data[2][i].c[j].c);
 
-                for (let j = 0; j < this.K; j++) {
-                    this.c[i][j]=0
-                }
+                        }
                     }
-                    console.log(this.M, this.K, this.z[5], this.y[5])
 for (let i = 0; i < (this.M - this.K + 1); i++) {
                 if (this.maxZ < this.z[i])
                     this.maxZ = this.z[i];
@@ -352,11 +543,9 @@ for (let i = 0; i < (this.M - this.K + 1); i++) {
                 this.maxY = this.y[i];
             }
 
-
-                    this.paintCanvas()
                 },
                 error => {
-                    this.errors=error.response.data.errors
+                   console.log(error.response.data)
                 }
                 )
         },
