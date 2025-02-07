@@ -260,7 +260,7 @@
                         <tr v-for="(item, index) in Sigbn1" :key="index">
                             <td>{{ index+1 }}</td>
                             <td>{{ makeCount(Sigbn1[index]) }}</td>
-                            <td>{{ makeCount(Sigbn1[index]) }}</td>
+                            <td>{{ makeCount(Sigbn2[index]) }}</td>
                         </tr>
                     </tbody>
                 </table>
